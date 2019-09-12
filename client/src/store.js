@@ -19,6 +19,7 @@ export default new Vuex.Store({
       state.logined = false
       state.username = ''
       state.type = ''
+      localStorage.clear()
     }
   },
   actions: {

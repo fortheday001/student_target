@@ -161,10 +161,33 @@ routerNoJwt.get('/api/v1/classes', async ctx=>{
 app.use(routerNoJwt.routes())
     .use(routerNoJwt.allowedMethods())
 
-    
-
 app.use(jwt.checkToken)
+
 const studentRouter = new Router()
+
+// 学生修改密码
+studentRouter.put('/api/v1/students/password', async ctx=>{
+    
+    const [rows, fields] = await db.query('SELECT password FROM st_students WHERE id = ?', [ctx.state.user.id])
+    if(rows[0].password === ctx.request.body.oldpassword) {
+
+        let _sql = `UPDATE st_students SET ? WHERE id = ?`
+        let _data = {
+            password: ctx.request.body.newpassword
+        }
+        await db.query(_sql, [_data, ctx.state.user.id])
+
+        ctx.body = {
+            ok: 1
+        }
+
+    } else {
+        ctx.body = {
+            ok: 0,
+            error: '旧密码输入错误'
+        }
+    }
+})
 
 // 学生修改一个目标的掌握情况
 studentRouter.put('/api/v1/mytargets/:id', async ctx=>{
@@ -280,9 +303,9 @@ studentRouter.get('/api/v1/targets', async ctx=>{
     }
 })
 
-
 app.use(studentRouter.routes())
     .use(studentRouter.allowedMethods())
+
 
 /*************** 需要老师 JWT 验证的路由 */
 // 验证令牌

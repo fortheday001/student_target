@@ -2,6 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from './views/Index.vue'
 
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(Router)
 
 export default new Router({
@@ -47,6 +52,10 @@ export default new Router({
     {
       path: '/targets',
       component: () => import('./views/Target.vue')
+    },
+    {
+      path: '/mypassword',
+      component: () => import('./views/Mypassword.vue')
     },
     {
       path: '/mytargets',

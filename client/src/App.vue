@@ -11,6 +11,7 @@
         <el-menu-item index="/">所有数据</el-menu-item>
         <template v-if="logined">
           <el-menu-item index="/mytargets">我的目标</el-menu-item>
+          <el-menu-item index="/mypassword">修改密码</el-menu-item>
           <template v-if="type=='老师登录'">
             <el-menu-item index="/classes">班级管理</el-menu-item>
             <el-menu-item index="/students">学生管理</el-menu-item>
@@ -18,7 +19,7 @@
             <el-menu-item index="/targets">目标管理</el-menu-item>
             <el-menu-item index="/questions">习题管理</el-menu-item>
           </template>
-          <el-menu-item index="/logout" @click="logout">{{username}} 退出</el-menu-item>
+          <el-menu-item index="/logout" @click="setLogout">{{username}} 退出</el-menu-item>
         </template>
         <template v-else>
           <el-menu-item index="/login">登录</el-menu-item>
@@ -53,11 +54,7 @@ export default {
     ]),
     ...mapActions([
       'chkLogin'
-    ]),
-    logout () {
-      this.setLogout()
-      localStorage.clear()
-    }
+    ])
   }
 }
 </script>
