@@ -30,6 +30,11 @@
               <el-switch :value="Boolean(scope.row.ischk)"></el-switch>
             </template>
           </el-table-column>
+          <el-table-column label="分类" prop="category" width="200">
+            <template slot-scope="scope">
+              <el-tag type="danger">{{scope.row.category}}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="目标" prop="title">
           </el-table-column>
           <el-table-column width="100">

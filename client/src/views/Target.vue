@@ -27,6 +27,11 @@
               <el-tag v-else-if="scope.row.type==2">情商</el-tag>
             </template>
           </el-table-column>
+          <el-table-column label="分类" prop="category" width="200">
+            <template slot-scope="scope">
+              <el-tag type="danger">{{scope.row.category}}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column prop="title" label="标题">
           </el-table-column>
           <el-table-column width="150" label="操作">
@@ -62,6 +67,11 @@
             <el-option label="情商" value="2"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="分类" prop="category">
+          <el-select v-model="form.category">
+            <el-option v-for="(v, k) in target_category" :key="k" :label="v" :value="v"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题" prop="title">
           <el-input autocomplete="off" v-model="form.title"></el-input>
         </el-form-item>
@@ -78,8 +88,30 @@
 export default {
   data () {
     return {
+      target_category: [
+        '01.HTML',
+        '02.CSS',
+        '03.JS基础语法',
+        '04.DOM操作',
+        '05.BOM操作',
+        '06.异步操作',
+        '07.ES678',
+        '08.Node',
+        '09.npm',
+        '10.Node第三方模块',
+        '11.Vue基础',
+        '12.Vue组件',
+        '13.Vue路由',
+        '14.Vuex',
+        '15.客户端接口调用',
+        '16.服务器端接口开发',
+        '17.MySQL',
+        '18.RESTFul API',
+        '19.在线商城'
+      ],
       form: {
         title: '',
+        category: '',
         type: ''
       },
       filter: {
@@ -91,6 +123,7 @@ export default {
       total: 0,
       rules: {
         title: { required: true, message: '标题不能为空' },
+        category: { required: true, message: '必须选择一个分类' },
         type: { required: true, message: '必须要选择类型' }
       },
       dialog: {
@@ -153,10 +186,6 @@ export default {
     },
     loadData () {
       this.getTargetData()
-
-      this.$axios.get('/v1/targets').then(res => {
-        this.targetData = res.d.list
-      })
     }
   },
   created () {

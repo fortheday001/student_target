@@ -113,7 +113,8 @@ routerNoJwt.get('/api/v1/classes/:id/targets', async ctx=>{
 routerNoJwt.get('/api/v1/students/:id/targets', async ctx=>{
     let _sql = `SELECT a.*,b.isok,b.ischk
                  FROM st_targets a
-                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)`
+                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
+                   ORDER BY a.category ASC`
 
     let values = [ctx.params.id]
 
@@ -143,7 +144,7 @@ routerNoJwt.get('/api/v1/classes', async ctx=>{
         let _sql1 = 'SELECT COUNT(*) total FROM st_classes'
         const [rows, fields] = await db.query(_sql1)
 
-        let page = ctx.query.id || 1
+        let page = ctx.query.page || 1
         let per_page = ctx.query.per_page || 10
         let _offset = (page-1)*per_page
         let _sql2 = `SELECT * FROM st_classes LIMIT ${_offset},${per_page}`
@@ -208,7 +209,8 @@ studentRouter.put('/api/v1/mytargets/:id', async ctx=>{
 studentRouter.get('/api/v1/mytargets', async ctx=>{
     let _sql = `SELECT a.*,b.isok,b.ischk
                  FROM st_targets a
-                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)`
+                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
+                   ORDER BY a.category ASC`
 
     let values = [ctx.state.user.id]
 
@@ -248,7 +250,7 @@ studentRouter.get('/api/v1/questions', async ctx=>{
         const [rows, fields] = await db.query(_sql1, _value)
 
         // 翻页
-        let page = ctx.query.id || 1
+        let page = ctx.query.page || 1
         let per_page = ctx.query.per_page || 10
         let _offset = (page-1)*per_page
         let _sql2 = `SELECT * FROM st_questions ${_where} LIMIT ${_offset},${per_page}`
@@ -287,10 +289,10 @@ studentRouter.get('/api/v1/targets', async ctx=>{
         const [rows, fields] = await db.query(_sql1, _value)
 
         // 翻页
-        let page = ctx.query.id || 1
+        let page = ctx.query.page || 1
         let per_page = ctx.query.per_page || 10
         let _offset = (page-1)*per_page
-        let _sql2 = `SELECT * FROM st_targets ${_where} LIMIT ${_offset},${per_page}`
+        let _sql2 = `SELECT * FROM st_targets ${_where} ORDER BY category ASC LIMIT ${_offset},${per_page}`
         const [data, dataFields] = await db.query(_sql2, _value)
 
         ctx.body = {
@@ -412,7 +414,7 @@ router.get('/api/v1/students', async ctx=>{
         const [rows, fields] = await db.query(_sql1, _value)
 
         // 翻页
-        let page = ctx.query.id || 1
+        let page = ctx.query.page || 1
         let per_page = ctx.query.per_page || 10
         let _offset = (page-1)*per_page
         let _sql2 = `SELECT * FROM st_students ${_where} LIMIT ${_offset},${per_page}`
@@ -487,7 +489,7 @@ router.get('/api/v1/teachers', async ctx=>{
         let _sql1 = 'SELECT COUNT(*) total FROM st_teachers'
         const [rows, fields] = await db.query(_sql1)
 
-        let page = ctx.query.id || 1
+        let page = ctx.query.page || 1
         let per_page = ctx.query.per_page || 10
         let _offset = (page-1)*per_page
         let _sql2 = `SELECT * FROM st_teachers LIMIT ${_offset},${per_page}`
@@ -508,6 +510,7 @@ router.post('/api/v1/targets', async ctx=>{
     let _sql = 'INSERT INTO st_targets SET ?'
     let _data = {
         title: ctx.request.body.title,
+        category: ctx.request.body.category,
         type: ctx.request.body.type
     }
     await db.query(_sql, _data)
