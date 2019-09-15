@@ -210,18 +210,20 @@ studentRouter.put('/api/v1/mytargets/:id', async ctx=>{
 
 // 学生查询自己的目标
 studentRouter.get('/api/v1/mytargets', async ctx=>{
-    let _sql = `SELECT a.*,b.isok,b.ischk
-                 FROM st_targets a
-                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
-                   ORDER BY a.category ASC`
-
+    let _where = 1
     let values = [ctx.state.user.id]
 
     // 根据 type 搜索
     if(ctx.query.type) {
-        _sql += ' WHERE a.type=?'
+        _where += ' AND a.type=?'
         values.push(ctx.query.type)
     }
+
+    let _sql = `SELECT a.*,b.isok,b.ischk
+                 FROM st_targets a
+                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
+                   WHERE ${_where}
+                   ORDER BY a.category ASC`
 
     const [rows, fields] = await db.query(_sql, values)
     ctx.body = {
@@ -253,10 +255,15 @@ studentRouter.get('/api/v1/questions', async ctx=>{
         const [rows, fields] = await db.query(_sql1, _value)
 
         // 翻页
-        let page = ctx.query.page || 1
-        let per_page = ctx.query.per_page || 10
-        let _offset = (page-1)*per_page
-        let _sql2 = `SELECT * FROM st_questions ${_where} LIMIT ${_offset},${per_page}`
+        let _limit = ''
+        if(ctx.query.page) {
+            let page = ctx.query.page || 1
+            let per_page = ctx.query.per_page || 10
+            let _offset = (page-1)*per_page
+            _limit = ` LIMIT ${_offset},${per_page} `
+        }
+        
+        let _sql2 = `SELECT * FROM st_questions ${_where} ${_limit}`
         const [data, dataFields] = await db.query(_sql2, _value)
 
         ctx.body = {
@@ -292,10 +299,18 @@ studentRouter.get('/api/v1/targets', async ctx=>{
         const [rows, fields] = await db.query(_sql1, _value)
 
         // 翻页
-        let page = ctx.query.page || 1
-        let per_page = ctx.query.per_page || 10
-        let _offset = (page-1)*per_page
-        let _sql2 = `SELECT * FROM st_targets ${_where} ORDER BY category ASC LIMIT ${_offset},${per_page}`
+        let _limit = ''
+        if(ctx.query.page) {
+            let page = ctx.query.page || 1
+            let per_page = ctx.query.per_page || 10
+            let _offset = (page-1)*per_page
+            _limit = ` LIMIT ${_offset},${per_page}`
+        }
+        
+        let _sql2 = `SELECT * FROM st_targets ${_where} ORDER BY category ASC ${_limit}`
+
+
+        
         const [data, dataFields] = await db.query(_sql2, _value)
 
         ctx.body = {
