@@ -111,18 +111,21 @@ routerNoJwt.get('/api/v1/classes/:id/targets', async ctx=>{
 
 // 查询某个学生的目标
 routerNoJwt.get('/api/v1/students/:id/targets', async ctx=>{
-    let _sql = `SELECT a.*,b.isok,b.ischk
-                 FROM st_targets a
-                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
-                   ORDER BY a.category ASC`
-
     let values = [ctx.params.id]
+    let _where = 1
+    let _sql
 
     // 根据 type 搜索
     if(ctx.query.type) {
-        _sql += ' WHERE a.type=?'
+        _where += ' AND a.type=?'
         values.push(ctx.query.type)
     }
+
+    _sql = `SELECT a.*,b.isok,b.ischk
+                 FROM st_targets a
+                  LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
+                   WHERE ${_where}
+                   ORDER BY a.category ASC`
 
     const [rows, fields] = await db.query(_sql, values)
     ctx.body = {
@@ -305,6 +308,45 @@ studentRouter.get('/api/v1/targets', async ctx=>{
     }
 })
 
+// 查询学生
+studentRouter.get('/api/v1/students', async ctx=>{
+    if(ctx.query.id) {
+        let _sql = 'SELECT * FROM st_students WHERE id = ?'
+        const [rows, fields] = await db.query(_sql, [ctx.query.id])
+        ctx.body = {
+            ok: 1,
+            data: rows[0]
+        }
+    } else {
+        let _where = ' WHERE 1 '
+        let _value = []
+
+        if(ctx.query.class_id) {
+            _where += ' AND class_id=? '
+            _value = [ctx.query.class_id]
+        }
+
+        let _sql1 = `SELECT COUNT(*) total FROM st_students ${_where}`
+        
+        const [rows, fields] = await db.query(_sql1, _value)
+
+        // 翻页
+        let page = ctx.query.page || 1
+        let per_page = ctx.query.per_page || 10
+        let _offset = (page-1)*per_page
+        let _sql2 = `SELECT * FROM st_students ${_where} LIMIT ${_offset},${per_page}`
+        const [data, dataFields] = await db.query(_sql2, _value)
+
+        ctx.body = {
+            ok: 1,
+            data: {
+                total: rows[0].total,
+                list: data
+            }
+        }
+    }
+})
+
 app.use(studentRouter.routes())
     .use(studentRouter.allowedMethods())
 
@@ -388,45 +430,6 @@ router.put('/api/v1/students/:id', async ctx=>{
 
     ctx.body = {
         ok: 1
-    }
-})
-
-// 查询学生
-router.get('/api/v1/students', async ctx=>{
-    if(ctx.query.id) {
-        let _sql = 'SELECT * FROM st_students WHERE id = ?'
-        const [rows, fields] = await db.query(_sql, [ctx.query.id])
-        ctx.body = {
-            ok: 1,
-            data: rows[0]
-        }
-    } else {
-        let _where = ' WHERE 1 '
-        let _value = []
-
-        if(ctx.query.class_id) {
-            _where += ' AND class_id=? '
-            _value = [ctx.query.class_id]
-        }
-
-        let _sql1 = `SELECT COUNT(*) total FROM st_students ${_where}`
-        
-        const [rows, fields] = await db.query(_sql1, _value)
-
-        // 翻页
-        let page = ctx.query.page || 1
-        let per_page = ctx.query.per_page || 10
-        let _offset = (page-1)*per_page
-        let _sql2 = `SELECT * FROM st_students ${_where} LIMIT ${_offset},${per_page}`
-        const [data, dataFields] = await db.query(_sql2, _value)
-
-        ctx.body = {
-            ok: 1,
-            data: {
-                total: rows[0].total,
-                list: data
-            }
-        }
     }
 })
 
