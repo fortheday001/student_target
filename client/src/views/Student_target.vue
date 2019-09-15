@@ -96,7 +96,7 @@ export default {
       let data = {
         ok: !this.targetData[k].ischk
       }
-      this.$axios.put(`/v1/students/${this.$route.params.id}/targets`, data).then(res => {
+      this.$axios.put(`/v1/students/${this.$route.params.id}/targets/${id}`, data).then(res => {
         if (res.data.ok === 1) {
           this.targetData[k].ischk = Number(!this.targetData[k].ischk)
         }
