@@ -162,10 +162,53 @@ routerNoJwt.get('/api/v1/classes', async ctx=>{
     }
 })
 
-app.use(routerNoJwt.routes())
-    .use(routerNoJwt.allowedMethods())
+// 查询目标
+routerNoJwt.get('/api/v1/targets', async ctx=>{
+    if(ctx.query.id) {
+        let _sql = 'SELECT * FROM st_targets WHERE id = ?'
+        const [rows, fields] = await db.query(_sql, [ctx.query.id])
+        ctx.body = {
+            ok: 1,
+            data: rows[0]
+        }
+    } else {
+        let _where = ' WHERE 1 '
+        let _value = []
 
-app.use(jwt.checkToken)
+        if(ctx.query.type) {
+            _where += ' AND type=? '
+            _value = [ctx.query.type]
+        }
+
+        let _sql1 = `SELECT COUNT(*) total FROM st_targets ${_where}`
+        
+        const [rows, fields] = await db.query(_sql1, _value)
+
+        // 翻页
+        let _limit = ''
+        if(ctx.query.page) {
+            let page = ctx.query.page || 1
+            let per_page = ctx.query.per_page || 10
+            let _offset = (page-1)*per_page
+            _limit = ` LIMIT ${_offset},${per_page}`
+        }
+        
+        let _sql2 = `SELECT * FROM st_targets ${_where} ORDER BY category ASC ${_limit}`
+
+
+        
+        const [data, dataFields] = await db.query(_sql2, _value)
+
+        ctx.body = {
+            ok: 1,
+            data: {
+                total: rows[0].total,
+                list: data
+            }
+        }
+    }
+})
+
 
 const studentRouter = new Router()
 
@@ -233,7 +276,7 @@ studentRouter.get('/api/v1/mytargets', async ctx=>{
 })
 
 // 查询习题
-studentRouter.get('/api/v1/questions', async ctx=>{
+routerNoJwt.get('/api/v1/questions', async ctx=>{
     if(ctx.query.id) {
         let _sql = 'SELECT * FROM st_questions WHERE id = ?'
         const [rows, fields] = await db.query(_sql, [ctx.query.id])
@@ -276,55 +319,8 @@ studentRouter.get('/api/v1/questions', async ctx=>{
     }  
 })
 
-// 查询目标
-studentRouter.get('/api/v1/targets', async ctx=>{
-    if(ctx.query.id) {
-        let _sql = 'SELECT * FROM st_targets WHERE id = ?'
-        const [rows, fields] = await db.query(_sql, [ctx.query.id])
-        ctx.body = {
-            ok: 1,
-            data: rows[0]
-        }
-    } else {
-        let _where = ' WHERE 1 '
-        let _value = []
-
-        if(ctx.query.type) {
-            _where += ' AND type=? '
-            _value = [ctx.query.type]
-        }
-
-        let _sql1 = `SELECT COUNT(*) total FROM st_targets ${_where}`
-        
-        const [rows, fields] = await db.query(_sql1, _value)
-
-        // 翻页
-        let _limit = ''
-        if(ctx.query.page) {
-            let page = ctx.query.page || 1
-            let per_page = ctx.query.per_page || 10
-            let _offset = (page-1)*per_page
-            _limit = ` LIMIT ${_offset},${per_page}`
-        }
-        
-        let _sql2 = `SELECT * FROM st_targets ${_where} ORDER BY category ASC ${_limit}`
-
-
-        
-        const [data, dataFields] = await db.query(_sql2, _value)
-
-        ctx.body = {
-            ok: 1,
-            data: {
-                total: rows[0].total,
-                list: data
-            }
-        }
-    }
-})
-
 // 查询学生
-studentRouter.get('/api/v1/students', async ctx=>{
+routerNoJwt.get('/api/v1/students', async ctx=>{
     if(ctx.query.id) {
         let _sql = 'SELECT * FROM st_students WHERE id = ?'
         const [rows, fields] = await db.query(_sql, [ctx.query.id])
@@ -362,13 +358,12 @@ studentRouter.get('/api/v1/students', async ctx=>{
     }
 })
 
-app.use(studentRouter.routes())
-    .use(studentRouter.allowedMethods())
+
 
 
 /*************** 需要老师 JWT 验证的路由 */
 // 验证令牌
-app.use(jwt.checkTeacher)
+
 
 const router = new Router()
 // 添加班级
@@ -621,7 +616,17 @@ router.put('/api/v1/students/:student_id/targets/:target_id', async ctx=>{
     }
 })
 
+// 无须登录的路由
+app.use(routerNoJwt.routes())
+    .use(routerNoJwt.allowedMethods())
 
+// 必须登录的路由
+app.use(jwt.checkToken)
+app.use(studentRouter.routes())
+    .use(studentRouter.allowedMethods())
+
+// 必须是老师登录的路由
+app.use(jwt.checkTeacher)
 app.use(router.routes())
     .use(router.allowedMethods())
 
