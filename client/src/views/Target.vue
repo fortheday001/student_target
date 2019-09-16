@@ -91,6 +91,9 @@
         <el-form-item label="标题" prop="title">
           <el-input autocomplete="off" v-model="form.title"></el-input>
         </el-form-item>
+        <el-form-item label="阶段描述" prop="description">
+          <el-input type="textarea" :row="8" autocomplete="off" v-model="form.description" placeholder="请输入阶段描述"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="dialog.addDialog.show = false">取 消</el-button>
@@ -130,7 +133,8 @@ export default {
         title: '',
         category: '',
         type: '',
-        step_id: ''
+        step_id: '',
+        description: ''
       },
       filter: {
         type: '',

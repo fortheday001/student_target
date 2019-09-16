@@ -611,7 +611,9 @@ router.post('/api/v1/targets', async ctx=>{
     let _data = {
         title: ctx.request.body.title,
         category: ctx.request.body.category,
-        type: ctx.request.body.type
+        type: ctx.request.body.type,
+        step_id: ctx.request.body.step_id,
+        description: ctx.request.body.description
     }
     await db.query(_sql, _data)
 
@@ -635,7 +637,10 @@ router.put('/api/v1/targets/:id', async ctx=>{
     let _sql = 'UPDATE st_targets SET ? WHERE id = ?'
     let _data = {
         title: ctx.request.body.title,
-        type: ctx.request.body.type
+        category: ctx.request.body.category,
+        type: ctx.request.body.type,
+        step_id: ctx.request.body.step_id,
+        description: ctx.request.body.description
     }
     await db.query(_sql, [_data, ctx.params.id])
 
