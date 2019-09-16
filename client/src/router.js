@@ -54,6 +54,10 @@ export default new Router({
       component: () => import('./views/Target.vue')
     },
     {
+      path: '/steps',
+      component: () => import('./views/Step.vue')
+    },
+    {
       path: '/mypassword',
       component: () => import('./views/Mypassword.vue')
     },

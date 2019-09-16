@@ -15,6 +15,7 @@
             <el-menu-item index="/students">学生管理</el-menu-item>
             <el-menu-item index="/teachers">老师管理</el-menu-item>
             <el-menu-item index="/targets">目标管理</el-menu-item>
+            <el-menu-item index="/steps">阶段管理</el-menu-item>
             <el-menu-item index="/questions">习题管理</el-menu-item>
           </template>
           <template v-else>

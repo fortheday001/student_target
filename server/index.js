@@ -162,6 +162,34 @@ routerNoJwt.get('/api/v1/classes', async ctx=>{
     }
 })
 
+// 查询阶段
+routerNoJwt.get('/api/v1/steps', async ctx=>{
+    if(ctx.query.id) {
+        let _sql = 'SELECT * FROM st_steps WHERE id = ?'
+        const [rows, fields] = await db.query(_sql, [ctx.query.id])
+        ctx.body = {
+            ok: 1,
+            data: rows[0]
+        }
+    } else {
+        let _sql1 = 'SELECT COUNT(*) total FROM st_steps'
+        const [rows, fields] = await db.query(_sql1)
+
+        let page = ctx.query.page || 1
+        let per_page = ctx.query.per_page || 10
+        let _offset = (page-1)*per_page
+        let _sql2 = `SELECT * FROM st_steps LIMIT ${_offset},${per_page}`
+        const [data, dataFields] = await db.query(_sql2)
+        ctx.body = {
+            ok: 1,
+            data: {
+                total: rows[0].total,
+                list: data
+            }
+        }
+    }
+})
+
 // 查询目标
 routerNoJwt.get('/api/v1/targets', async ctx=>{
     if(ctx.query.id) {
@@ -399,6 +427,45 @@ router.put('/api/v1/classes/:id', async ctx=>{
     let _sql = 'UPDATE st_classes SET ? WHERE id = ?'
     let _data = {
         class_name: ctx.request.body.class_name
+    }
+    await db.query(_sql, [_data, ctx.params.id])
+
+    ctx.body = {
+        ok: 1
+    }
+})
+
+/*************** 阶段管理 */
+// 添加阶段
+router.post('/api/v1/steps', async ctx=>{
+    let _sql = 'INSERT INTO st_steps SET ?'
+    let _data = {
+        step_name: ctx.request.body.step_name,
+        step_desc: ctx.request.body.step_desc,
+    }
+    await db.query(_sql, _data)
+
+    ctx.body = {
+        ok: 1
+    }
+})
+
+// 删除阶段
+router.delete('/api/v1/steps/:id', async ctx=>{
+    let _sql = 'DELETE FROM st_steps WHERE id = ?'
+    await db.query(_sql, [ctx.params.id])
+
+    ctx.body = {
+        ok: 1
+    }
+})
+
+// 修改阶段
+router.put('/api/v1/steps/:id', async ctx=>{
+    let _sql = 'UPDATE st_steps SET ? WHERE id = ?'
+    let _data = {
+        step_name: ctx.request.body.step_name,
+        step_desc: ctx.request.body.step_desc,
     }
     await db.query(_sql, [_data, ctx.params.id])
 
