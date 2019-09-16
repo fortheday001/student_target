@@ -13,6 +13,12 @@
           <el-option label="所有分类" value=""></el-option>
           <el-option v-for="(v, k) in target_category" :key="k" :label="v" :value="v"></el-option>
         </el-select>
+
+        <el-select v-model="filter.step_id">
+          <el-option label="所有阶段" value=""></el-option>
+          <el-option v-for="v in stepData" :key="v.id" :label="v.step_name" :value="v.id"></el-option>
+        </el-select>
+
       </el-col>
       <el-col :span="12" class="buttons">
         <el-button @click="dialog.addDialog.show=true">添加新的记录</el-button>
@@ -77,6 +83,11 @@
             <el-option v-for="(v, k) in target_category" :key="k" :label="v" :value="v"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="阶段" prop="step_id">
+          <el-select v-model="form.step_id">
+            <el-option v-for="v in stepData" :key="v.id" :label="v.step_name" :value="v.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="标题" prop="title">
           <el-input autocomplete="off" v-model="form.title"></el-input>
         </el-form-item>
@@ -118,11 +129,13 @@ export default {
       form: {
         title: '',
         category: '',
-        type: ''
+        type: '',
+        step_id: ''
       },
       filter: {
         type: '',
         category: '',
+        step_id: '',
         page: 1,
         id: '',
         per_page: 999
@@ -131,6 +144,7 @@ export default {
       rules: {
         title: { required: true, message: '标题不能为空' },
         category: { required: true, message: '必须选择一个分类' },
+        step_id: { required: true, message: '必须选择一个阶段' },
         type: { required: true, message: '必须要选择类型' }
       },
       dialog: {
@@ -138,7 +152,8 @@ export default {
           show: false
         }
       },
-      targetData: []
+      targetData: [],
+      stepData: []
     }
   },
   watch: {
@@ -193,6 +208,11 @@ export default {
     },
     loadData () {
       this.getTargetData()
+
+      // 获取阶段数据
+      this.$axios.get('/v1/steps').then(res => {
+        this.stepData = res.d.list
+      })
     }
   },
   created () {

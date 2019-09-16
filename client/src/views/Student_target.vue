@@ -11,6 +11,10 @@
         <el-radio-button label="项目"></el-radio-button>
         <el-radio-button label="情商"></el-radio-button>
       </el-radio-group>
+      <el-select v-model="filter.step_id">
+        <el-option label="所有阶段" value=""></el-option>
+        <el-option v-for="v in stepData" :key="v.id" :label="v.step_name" :value="v.id"></el-option>
+      </el-select>
     </div>
     <div class="data-box">
       <el-card class="box-card">
@@ -60,10 +64,22 @@ export default {
   data () {
     return {
       currentType: '全部',
+      filter: {
+        step_id: ''
+      },
       student: {
         stu_name: ''
       },
-      targetData: []
+      targetData: [],
+      stepData: []
+    }
+  },
+  watch: {
+    filter: {
+      deep: true,
+      handler: function () {
+        this.getStudentsTargetsData()
+      }
     }
   },
   methods: {
@@ -71,13 +87,13 @@ export default {
       this.getStudentsTargetsData(v)
     },
     getStudentsTargetsData (type = '') {
-      let url = `/v1/students/${this.$route.params.id}/targets`
+      let url = `/v1/students/${this.$route.params.id}/targets?step_id=${this.filter.step_id}`
       if (type === '知识点') {
-        url += '?type=0'
+        url += '&type=0'
       } else if (type === '项目') {
-        url += '?type=1'
+        url += '&type=1'
       } else if (type === '情商') {
-        url += '?type=2'
+        url += '&type=2'
       }
       // 获取学生的目标情况
       this.$axios.get(url).then(res => {
@@ -91,6 +107,11 @@ export default {
       })
 
       this.getStudentsTargetsData()
+
+      // 获取阶段数据
+      this.$axios.get('/v1/steps').then(res => {
+        this.stepData = res.d.list
+      })
     },
     setChk (id, k) {
       let data = {

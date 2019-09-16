@@ -121,6 +121,11 @@ routerNoJwt.get('/api/v1/students/:id/targets', async ctx=>{
         values.push(ctx.query.type)
     }
 
+    if(ctx.query.step_id) {
+        _where += ' AND a.step_id=?'
+        values.push(ctx.query.step_id)
+    }
+
     _sql = `SELECT a.*,b.isok,b.ischk
                  FROM st_targets a
                   LEFT JOIN st_student_targets b ON (a.id=b.target_id AND b.student_id=?)
@@ -208,6 +213,11 @@ routerNoJwt.get('/api/v1/targets', async ctx=>{
             _value = [ctx.query.type]
         }
 
+        if(ctx.query.step_id) {
+            _where += ' AND step_id=? '
+            _value = [ctx.query.step_id]
+        }
+
         if(ctx.query.category) {
             _where += ' AND category=? '
             _value = [ctx.query.category]
@@ -293,6 +303,11 @@ studentRouter.get('/api/v1/mytargets', async ctx=>{
     if(ctx.query.type) {
         _where += ' AND a.type=?'
         values.push(ctx.query.type)
+    }
+
+    if(ctx.query.step_id) {
+        _where += ' AND a.step_id=? '
+        values.push(ctx.query.step_id)
     }
 
     let _sql = `SELECT a.*,b.isok,b.ischk
