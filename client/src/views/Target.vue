@@ -8,6 +8,11 @@
           <el-option label="项目" value="1"></el-option>
           <el-option label="情商" value="2"></el-option>
         </el-select>
+
+        <el-select v-model="filter.category" placeholder="选择分类">
+          <el-option label="所有分类" value=""></el-option>
+          <el-option v-for="(v, k) in target_category" :key="k" :label="v" :value="v"></el-option>
+        </el-select>
       </el-col>
       <el-col :span="12" class="buttons">
         <el-button @click="dialog.addDialog.show=true">添加新的记录</el-button>
@@ -107,7 +112,8 @@ export default {
         '16.服务器端接口开发',
         '17.MySQL',
         '18.RESTFul API',
-        '19.在线商城'
+        '19.在线商城',
+        '20.项目开发'
       ],
       form: {
         title: '',
@@ -116,9 +122,10 @@ export default {
       },
       filter: {
         type: '',
+        category: '',
         page: 1,
         id: '',
-        per_page: 20
+        per_page: 999
       },
       total: 0,
       rules: {

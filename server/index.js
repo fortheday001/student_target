@@ -180,6 +180,11 @@ routerNoJwt.get('/api/v1/targets', async ctx=>{
             _value = [ctx.query.type]
         }
 
+        if(ctx.query.category) {
+            _where += ' AND category=? '
+            _value = [ctx.query.category]
+        }
+
         let _sql1 = `SELECT COUNT(*) total FROM st_targets ${_where}`
         
         const [rows, fields] = await db.query(_sql1, _value)
