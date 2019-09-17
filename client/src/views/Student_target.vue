@@ -12,7 +12,6 @@
         <el-radio-button label="情商"></el-radio-button>
       </el-radio-group>
       <el-select v-model="filter.step_id">
-        <el-option label="所有阶段" value=""></el-option>
         <el-option v-for="v in stepData" :key="v.id" :label="v.step_name" :value="v.id"></el-option>
       </el-select>
     </div>
@@ -65,7 +64,7 @@ export default {
     return {
       currentType: '全部',
       filter: {
-        step_id: ''
+        step_id: 1
       },
       student: {
         stu_name: ''
