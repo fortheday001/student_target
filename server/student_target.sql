@@ -11,7 +11,7 @@
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 18/09/2019 08:18:40
+ Date: 18/09/2019 21:39:18
 */
 
 SET NAMES utf8mb4;
@@ -46,7 +46,7 @@ CREATE TABLE `st_questions` (
   `answer` varchar(300) NOT NULL COMMENT '答案',
   `target_id` int(10) unsigned NOT NULL COMMENT '目标ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=185 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of st_questions
@@ -236,6 +236,7 @@ INSERT INTO `st_questions` VALUES (181, 'left join 的连接语法是？', '', '
 INSERT INTO `st_questions` VALUES (182, '两张表之间有几种关系？', '', '', 69);
 INSERT INTO `st_questions` VALUES (183, '什么是外键？什么时候使用？', '', '', 69);
 INSERT INTO `st_questions` VALUES (184, '什么是中间表？什么时候使用？', '', '', 69);
+INSERT INTO `st_questions` VALUES (185, '请写出卖。。', 'a. xxx\nb.xx\nc..\n参数地址：http://www.baidu.com', 'adfdsaa. xxx\nb.xx\nc..\n参数地址：http://www.baidu.com', 90);
 COMMIT;
 
 -- ----------------------------
@@ -247,7 +248,7 @@ CREATE TABLE `st_steps` (
   `step_name` varchar(60) NOT NULL COMMENT '阶段名称',
   `step_desc` varchar(1200) NOT NULL COMMENT '阶段描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of st_steps
@@ -267,18 +268,9 @@ CREATE TABLE `st_student_targets` (
   `target_id` int(10) unsigned NOT NULL COMMENT '目标ID',
   `isok` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否掌握',
   `ischk` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否审核',
+  `opt_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY (`student_id`,`target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of st_student_targets
--- ----------------------------
-BEGIN;
-INSERT INTO `st_student_targets` VALUES (6, 1, 0, 0);
-INSERT INTO `st_student_targets` VALUES (6, 2, 0, 0);
-INSERT INTO `st_student_targets` VALUES (6, 82, 0, 0);
-INSERT INTO `st_student_targets` VALUES (6, 87, 0, 0);
-COMMIT;
 
 -- ----------------------------
 -- Table structure for st_students
@@ -425,7 +417,7 @@ CREATE TABLE `st_targets` (
   `step_id` int(10) unsigned NOT NULL COMMENT '阶段ID',
   `description` varchar(600) DEFAULT NULL COMMENT '目标描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of st_targets
@@ -598,6 +590,13 @@ INSERT INTO `st_targets` VALUES (200, '根据分类搜索商品的流程是？',
 INSERT INTO `st_targets` VALUES (201, '根据销量对商品排序的SQL思路是？', 0, '09.商品搜索', 2, NULL);
 INSERT INTO `st_targets` VALUES (202, '根据关键字搜索商品的流程？', 0, '09.商品搜索', 2, NULL);
 INSERT INTO `st_targets` VALUES (203, '根据分类获取筛选品牌和筛选属性的流程', 0, '09.商品搜索', 2, NULL);
+INSERT INTO `st_targets` VALUES (204, 'uniapp 是什么？干什么用的？什么时候使用？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (205, 'App.vue 和 main.js 文件的用途是？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (206, '应用生命周期、页面生命周期、组件生命周期的特点是？都是什么？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (207, '全局事件是什么？有什么用？怎么用？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (208, 'pages.json、manifest.json、uni.scss、vue-config.js、package.json 文件都是干什么用的？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (209, '能够在浏览器、手机、小程序中运行页面', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (210, '能够将程序发布到H5、手机 APP、微信小程序中', 0, '01.uniapp 基础', 3, NULL);
 COMMIT;
 
 -- ----------------------------
