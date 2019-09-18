@@ -5,8 +5,9 @@ import axios from 'axios'
 import ElementUI, { Message } from 'element-ui'
 import store from './store'
 import 'element-ui/lib/theme-chalk/index.css'
+import config from './config'
 
-axios.defaults.baseURL = 'http://127.0.0.1:7000/api'
+axios.defaults.baseURL = `http://${config.ip}:${config.port}/api`
 
 axios.interceptors.request.use(function (config) {
   let token = localStorage.getItem('token')
