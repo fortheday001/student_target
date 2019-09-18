@@ -33,8 +33,18 @@ RUN cd /student_target/client && \
 
 # 部署前端
 RUN echo "pid \"logs/nginx.pid\";" >> /etc/nginx/nginx.conf
-RUN echo "server {listen 80 default_server;location / {root /student_target/client/dist;try_files $uri $uri/ /index.html last;index index.html;}}" > /etc/nginx/conf.d/default.conf
-
+RUN echo $'server {\n\
+        listen 80;\n\
+        root /student_target/client/dist;\n\
+        location / {\n\
+                try_files $uri $uri/ @router;\n\
+                index index.html index.htm;\n\
+        }\n\
+        location @router {\n\
+                rewrite ^.*$ /index.html last;\n\
+        }\n\
+}'\
+> /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # 启动脚本
