@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@koa/cors": "^3.0.0",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
-    "koa-bodyparser": "^4.2.1",
     "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
     "koa-cors": "^0.0.16",
     "koa-router": "^7.4.0",
     "mysql2": "^1.7.0"

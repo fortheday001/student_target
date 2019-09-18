@@ -1,7 +1,7 @@
 module.exports = {
     db: {
         connectionLimit : 20,
-        host            : '127.0.0.1',
+        host            : 'mysql',
         user            : 'root',
         password        : '123123',
         database        : 'student_target',
