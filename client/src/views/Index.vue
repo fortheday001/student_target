@@ -24,9 +24,9 @@
           </el-table-column>
           <el-table-column label="目标完成情况">
             <template slot-scope="scope">
-              <el-progress :percentage="scope.row.type0/(targetTotalCount.type0_total||1)*100" color="#67C23A"></el-progress>
-              <el-progress :percentage="scope.row.type1/(targetTotalCount.type1_total||1)*100" color="#E6A23C"></el-progress>
-              <el-progress :percentage="scope.row.type2/(targetTotalCount.type2_total||1)*100" color="#F56C6C"></el-progress>
+              <el-progress :percentage="(scope.row.type0/(targetTotalCount.type0_total||1)*100).toFixed(1)*1" color="#67C23A"></el-progress>
+              <el-progress :percentage="(scope.row.type1/(targetTotalCount.type1_total||1)*100).toFixed(1)*1" color="#E6A23C"></el-progress>
+              <el-progress :percentage="(scope.row.type2/(targetTotalCount.type2_total||1)*100).toFixed(1)*1" color="#F56C6C"></el-progress>
             </template>
           </el-table-column>
           <el-table-column prop="day1" label="近 1 天掌握" width="100">

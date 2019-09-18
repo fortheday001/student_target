@@ -13,6 +13,18 @@
     </div>
     <div class="data-box">
       <el-card class="box-card">
+        <div slot="header">
+          <el-row>
+            <el-col v-for="v in tongji" :key="v.step_id" :span="2">
+              <el-progress
+              :width="100"
+              type="circle"
+              :percentage="(Number(v.cc)/v.total*100).toFixed(2)*1">
+              </el-progress>
+              <p class="tongji_txt">{{v.step_name}}</p>
+            </el-col>
+          </el-row>
+        </div>
         <el-table :data="targetData" border>
           <el-table-column type="index" width="50">
           </el-table-column>
@@ -60,7 +72,8 @@ export default {
         step_id: 1
       },
       targetData: [],
-      stepData: []
+      stepData: [],
+      tongji: []
     }
   },
   watch: {
@@ -96,6 +109,11 @@ export default {
       this.$axios.get('/v1/steps').then(res => {
         this.stepData = res.d.list
       })
+
+      // 查询某个学生每个阶段的目标完成率
+      this.$axios.get(`/v1/mytargets/target_tongji`).then(res => {
+        this.tongji = res.d
+      })
     },
     setOk (id, k) {
       let data = {
@@ -117,5 +135,16 @@ export default {
 <style lang="less">
   .search-box {
     margin-bottom: 20px;
+  }
+  .student_target {
+    .el-progress {
+      margin-right: 10px;
+      background: #fbecd9;
+      border-radius: 50%;
+    }
+    .tongji_txt {
+      font-size: 12px;
+      color: #909399;
+    }
   }
 </style>

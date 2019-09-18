@@ -143,6 +143,33 @@ routerNoJwt.get('/api/v1/students/:id/targets', async ctx=>{
                    ORDER BY a.category ASC`
 
     const [rows, fields] = await db.query(_sql, values)
+
+
+    ctx.body = {
+        ok: 1,
+        data: rows
+    }
+})
+
+// 查询某个学生每个阶段的目标完成率
+routerNoJwt.get('/api/v1/students/:id/target_tongji', async ctx=>{
+
+    // 统计阶段完成率
+    const _sql1 = `SELECT COUNT(*) total,r.cc,x.step_id,c.step_name
+                    FROM st_targets x
+                    LEFT JOIN (SELECT COUNT(*) cc,b.step_id
+                                FROM st_student_targets a 
+                                LEFT JOIN st_targets b ON a.target_id=b.id
+                                    WHERE a.student_id = ? AND a.ischk=1
+                                    GROUP BY b.step_id) r 
+                    ON x.step_id=r.step_id
+                    LEFT JOIN st_steps c ON c.id=x.step_id
+                    WHERE x.step_id>0
+                    GROUP BY x.step_id
+                     ORDER BY x.step_id`
+    await db.query('set sql_mode=""')
+    const [rows, fields] = await db.query(_sql1, [ctx.params.id])
+
     ctx.body = {
         ok: 1,
         data: rows
@@ -301,6 +328,31 @@ studentRouter.put('/api/v1/mytargets/:id', async ctx=>{
 
     ctx.body = {
         ok: 1
+    }
+})
+
+// 查询某个学生每个阶段的目标完成率
+studentRouter.get('/api/v1/mytargets/target_tongji', async ctx=>{
+
+    // 统计阶段完成率
+    const _sql1 = `SELECT COUNT(*) total,r.cc,x.step_id,c.step_name
+                    FROM st_targets x
+                    LEFT JOIN (SELECT COUNT(*) cc,b.step_id
+                                FROM st_student_targets a 
+                                LEFT JOIN st_targets b ON a.target_id=b.id
+                                    WHERE a.student_id = ? AND a.ischk=1
+                                    GROUP BY b.step_id) r 
+                    ON x.step_id=r.step_id
+                    LEFT JOIN st_steps c ON c.id=x.step_id
+                    WHERE x.step_id>0
+                    GROUP BY x.step_id
+                     ORDER BY x.step_id`
+    await db.query('set sql_mode=""')
+    const [rows, fields] = await db.query(_sql1, [ctx.state.user.id])
+
+    ctx.body = {
+        ok: 1,
+        data: rows
     }
 })
 
