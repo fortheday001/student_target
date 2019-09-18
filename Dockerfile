@@ -22,7 +22,7 @@ COPY server /student_target/server
 
 # 部署后端
 RUN cd /student_target/server && \
-	rm -rf node_modules config.js && \
+	rm -rf node_modules && \
 	npm i > /dev/null 2>&1
 
 # 打包前端
