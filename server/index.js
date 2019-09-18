@@ -117,12 +117,12 @@ routerNoJwt.get('/api/v1/students/:id/targets', async ctx=>{
 
     // 根据 type 搜索
     if(ctx.query.type) {
-        _where += ' AND a.type=?'
+        _where += ' AND a.type=? '
         values.push(ctx.query.type)
     }
 
     if(ctx.query.step_id) {
-        _where += ' AND a.step_id=?'
+        _where += ' AND a.step_id=? '
         values.push(ctx.query.step_id)
     }
 
@@ -210,17 +210,17 @@ routerNoJwt.get('/api/v1/targets', async ctx=>{
 
         if(ctx.query.type) {
             _where += ' AND type=? '
-            _value = [ctx.query.type]
+            _value.push(ctx.query.type)
         }
 
         if(ctx.query.step_id) {
             _where += ' AND step_id=? '
-            _value = [ctx.query.step_id]
+            _value.push(ctx.query.step_id)
         }
 
         if(ctx.query.category) {
             _where += ' AND category=? '
-            _value = [ctx.query.category]
+            _value.push(ctx.query.category)
         }
 
         let _sql1 = `SELECT COUNT(*) total FROM st_targets ${_where}`
