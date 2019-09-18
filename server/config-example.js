@@ -1,7 +1,4 @@
 module.exports = {
-    app: {
-        port: 7000,
-    },
     db: {
         connectionLimit : 20,
         host            : 'mysql',
