@@ -4,6 +4,7 @@ const db = require('./db')
 const jwt = require('./jwt')
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
+const config = require('./config')
 
 const app = new Koa();
 
@@ -722,4 +723,4 @@ app.use(jwt.checkTeacher)
 app.use(router.routes())
     .use(router.allowedMethods())
 
-app.listen(7000);
+app.listen(config.app.port);
