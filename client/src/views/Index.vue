@@ -29,6 +29,12 @@
               <el-progress :percentage="scope.row.type2/(targetTotalCount.type2_total||1)*100" color="#F56C6C"></el-progress>
             </template>
           </el-table-column>
+          <el-table-column prop="day1" label="近 1 天掌握" width="100">
+          </el-table-column>
+          <el-table-column prop="day2" label="近 2 天掌握" width="100">
+          </el-table-column>
+          <el-table-column prop="day3" label="近 3 天掌握" width="100">
+          </el-table-column>
           <el-table-column width="80">
             <template slot-scope="scope">
               <el-button size="mini" @click="$router.push(`/students/${scope.row.stu_id}/targets`)">详情</el-button>

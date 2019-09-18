@@ -91,7 +91,16 @@ routerNoJwt.get('/api/v1/classes/:id/targets', async ctx=>{
                     (SELECT COUNT(*) 
                     FROM st_student_targets b 
                     LEFT JOIN st_targets c ON b.target_id=c.id
-                    WHERE a.id=b.student_id AND c.type=2 AND b.ischk=1) type2
+                    WHERE a.id=b.student_id AND c.type=2 AND b.ischk=1) type2,
+                    (SELECT COUNT(*) 
+                    FROM st_student_targets b 
+                    WHERE a.id=b.student_id AND b.isok=1 AND b.opt_time BETWEEN NOW() AND (NOW() - interval 24 hour)) day1,
+                    (SELECT COUNT(*) 
+                    FROM st_student_targets b 
+                    WHERE a.id=b.student_id AND b.isok=1 AND b.opt_time BETWEEN NOW() AND (NOW() - interval 48 hour)) day2,
+                    (SELECT COUNT(*) 
+                    FROM st_student_targets b 
+                    WHERE a.id=b.student_id AND b.isok=1 AND b.opt_time BETWEEN NOW() AND (NOW() - interval 72 hour)) day3
                 FROM st_students a
                     WHERE a.class_id=?`
 
