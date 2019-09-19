@@ -80,7 +80,7 @@ export default {
     filter: {
       deep: true,
       handler: function () {
-        this.getStudentsTargetsData()
+        this.getStudentsTargetsData(this.currentType)
       }
     }
   },
