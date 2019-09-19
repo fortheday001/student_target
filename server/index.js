@@ -41,6 +41,18 @@ routerNoJwt.post('/api/v1/teachers/access_tokens', async (ctx, next)=>{
     }
 })
 
+// 查看某个班级某一天的日报
+routerNoJwt.get('/api/v1/classes/:class_id/day_reports/:date', async (ctx, next)=>{
+    let _sql = `SELECT * FROM st_day_reports WHERE student_id IN 
+                (SELECT id FROM st_students WHERE class_id=?) AND date=?`
+    const [rows, fields] = await db.query(_sql, [ctx.params.class_id, ctx.params.date])
+
+    ctx.body = {
+        ok: 1,
+        data: rows
+    }
+})
+
 // 学生登录
 routerNoJwt.post('/api/v1/students/access_tokens', async ctx=>{
     let _sql = 'SELECT * FROM st_students WHERE stu_name=?'
@@ -322,6 +334,42 @@ studentRouter.put('/api/v1/mytargets/:id', async ctx=>{
         student_id: ctx.state.user.id,
         target_id: ctx.params.id,
         isok: ctx.request.body.ok
+    }
+    await db.query(_sql, _data)
+
+    ctx.body = {
+        ok: 1
+    }
+})
+
+// 学生查看自己的日报
+studentRouter.get('/api/v1/mydayreports', async ctx=>{
+    // 翻页
+    let _limit = ''
+    if(ctx.query.page) {
+        let page = ctx.query.page || 1
+        let per_page = ctx.query.per_page || 10
+        let _offset = (page-1)*per_page
+        _limit = ` LIMIT ${_offset},${per_page} `
+    }
+    
+    let _sql = `SELECT * FROM st_day_reports WHERE student_id=? ORDER BY date DESC ${_limit}`
+    const [rows, fields] = await db.query(_sql, [ctx.state.user.id])
+
+    ctx.body = {
+        ok: 1,
+        data: rows
+    }
+})
+
+// 学生发表日报
+studentRouter.post('/api/v1/day_reports', async ctx=>{
+    const _date = new Date()
+    let _sql = `REPLACE INTO st_day_reports SET ?`
+    let _data = {
+        student_id: ctx.state.user.id,
+        date: _date.getFullYear() + '-' + (_date.getMonth()+1) + '-' + _date.getDate(),
+        content: ctx.request.body.content
     }
     await db.query(_sql, _data)
 

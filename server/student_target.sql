@@ -11,7 +11,7 @@
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 18/09/2019 21:39:18
+ Date: 19/09/2019 14:31:01
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,24 @@ CREATE TABLE `st_classes` (
 BEGIN;
 INSERT INTO `st_classes` VALUES (12, '全栈-18级-12班-第3学期');
 INSERT INTO `st_classes` VALUES (13, '全栈-18级-34班-第3学期');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for st_day_reports
+-- ----------------------------
+DROP TABLE IF EXISTS `st_day_reports`;
+CREATE TABLE `st_day_reports` (
+  `student_id` int(10) unsigned NOT NULL COMMENT '学生ID',
+  `date` date NOT NULL COMMENT '提交日期',
+  `content` varchar(10000) NOT NULL COMMENT '日报内容',
+  PRIMARY KEY (`student_id`,`date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of st_day_reports
+-- ----------------------------
+BEGIN;
+INSERT INTO `st_day_reports` VALUES (6, '2019-09-19', '今天掌握了2个目标');
 COMMIT;
 
 -- ----------------------------
@@ -248,7 +266,7 @@ CREATE TABLE `st_steps` (
   `step_name` varchar(60) NOT NULL COMMENT '阶段名称',
   `step_desc` varchar(1200) NOT NULL COMMENT '阶段描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of st_steps
@@ -417,7 +435,7 @@ CREATE TABLE `st_targets` (
   `step_id` int(10) unsigned NOT NULL COMMENT '阶段ID',
   `description` varchar(600) DEFAULT NULL COMMENT '目标描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=226 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of st_targets
@@ -597,6 +615,21 @@ INSERT INTO `st_targets` VALUES (207, '全局事件是什么？有什么用？�
 INSERT INTO `st_targets` VALUES (208, 'pages.json、manifest.json、uni.scss、vue-config.js、package.json 文件都是干什么用的？', 0, '01.uniapp 基础', 3, NULL);
 INSERT INTO `st_targets` VALUES (209, '能够在浏览器、手机、小程序中运行页面', 0, '01.uniapp 基础', 3, NULL);
 INSERT INTO `st_targets` VALUES (210, '能够将程序发布到H5、手机 APP、微信小程序中', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (211, 'uniapp 中的路由如何定义？uniapp 中如何实现路由的跳转？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (212, 'uniapp 中路由有几种形式？不同形式的页面栈特点是？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (213, '因为 uniapp 的项目代码，可以同时编译运行在不同平台上，那么如何判断程序当前的运行平台？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (214, 'px 和 rpx 两种单位的区别？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (215, '如何为 body 设置样式？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (216, '如何设置全局样式和页面样式', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (217, '小程序平台下如何获取系统状态栏的高度？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (218, 'click 事件在 uniapp 中使用？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (219, '在一个页面中如何获取上一个页面中传过来的参数？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (220, '什么是条件编译？干什么用的？怎么用？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (221, '使用 uniapp 开发时 * 选择器有什么注意的？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (222, 'uniapp 中的标签和 html 中的标签对应关系是？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (223, 'js 中的 document、window、localstorage、cookie 对象能在 uniapp 中使用吗？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (224, '页面之间可以通过什么办法进行数据通信？', 0, '01.uniapp 基础', 3, NULL);
+INSERT INTO `st_targets` VALUES (225, '如何在项目中使用字体图标？', 0, '01.uniapp 基础', 3, NULL);
 COMMIT;
 
 -- ----------------------------
