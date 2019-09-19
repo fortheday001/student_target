@@ -43,9 +43,11 @@ routerNoJwt.post('/api/v1/teachers/access_tokens', async (ctx, next)=>{
 
 // 查看某个班级某一天的日报
 routerNoJwt.get('/api/v1/classes/:class_id/day_reports/:date', async (ctx, next)=>{
-    let _sql = `SELECT * FROM st_day_reports WHERE student_id IN 
-                (SELECT id FROM st_students WHERE class_id=?) AND date=?`
-    const [rows, fields] = await db.query(_sql, [ctx.params.class_id, ctx.params.date])
+    let _sql = `SELECT a.stu_name,b.content,b.date
+                 FROM st_students a 
+                  LEFT JOIN st_day_reports b ON(a.id=b.student_id AND b.date=?)
+                  WHERE a.class_id=?`
+    const [rows, fields] = await db.query(_sql, [ctx.params.date, ctx.params.class_id])
 
     ctx.body = {
         ok: 1,
@@ -356,9 +358,15 @@ studentRouter.get('/api/v1/mydayreports', async ctx=>{
     let _sql = `SELECT * FROM st_day_reports WHERE student_id=? ORDER BY date DESC ${_limit}`
     const [rows, fields] = await db.query(_sql, [ctx.state.user.id])
 
+    let _sql1 = `SELECT COUNT(*) total FROM st_day_reports WHERE student_id=?`
+    const [rows1, fields1] = await db.query(_sql1, [ctx.state.user.id])
+
     ctx.body = {
         ok: 1,
-        data: rows
+        data: {
+            list: rows,
+            total: rows1[0].total
+        }
     }
 })
 

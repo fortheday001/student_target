@@ -11,7 +11,7 @@
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 19/09/2019 14:31:01
+ Date: 19/09/2019 15:48:31
 */
 
 SET NAMES utf8mb4;
@@ -45,13 +45,6 @@ CREATE TABLE `st_day_reports` (
   `content` varchar(10000) NOT NULL COMMENT '日报内容',
   PRIMARY KEY (`student_id`,`date`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of st_day_reports
--- ----------------------------
-BEGIN;
-INSERT INTO `st_day_reports` VALUES (6, '2019-09-19', '今天掌握了2个目标');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for st_questions

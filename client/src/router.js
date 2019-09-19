@@ -17,9 +17,14 @@ export default new Router({
       path: '/',
       component: Index
     },
+
     {
       path: '/logout',
       redirect: '/login'
+    },
+    {
+      path: '/dayreports',
+      component: () => import('./views/Day_reports.vue')
     },
     {
       path: '/students/:id/targets',
@@ -64,6 +69,10 @@ export default new Router({
     {
       path: '/mytargets',
       component: () => import('./views/Mytargets.vue')
+    },
+    {
+      path: '/mydayreports',
+      component: () => import('./views/Mydayreports.vue')
     }
   ]
 })
