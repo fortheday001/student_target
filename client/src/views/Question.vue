@@ -63,7 +63,8 @@
           <el-input autocomplete="off" v-model="form.options" type="textarea" :rows="3"></el-input>
         </el-form-item>
         <el-form-item label="答案" prop="answer">
-          <el-input autocomplete="off" v-model="form.answer" type="textarea" :rows="3"></el-input>
+          <quill-editor v-model="form.answer" :options="editorOption">
+          </quill-editor>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -75,9 +76,41 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
+
 export default {
+  components: {
+    quillEditor
+  },
   data () {
     return {
+      editorOption: {
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+            ['blockquote', 'code-block', 'link']
+
+            // [{ 'header': 1 }, { 'header': 2 }], // custom button values
+            // [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            // [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+            // [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+            // [{ 'direction': 'rtl' }], // text direction
+
+            // [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+            // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+            // [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+            // [{ 'font': [] }],
+            // [{ 'align': [] }],
+
+            // ['clean']
+          ]
+        }
+      },
       form: {
         question: '',
         answer: '',

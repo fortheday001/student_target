@@ -15,7 +15,7 @@
         <el-table :data="questionData" border>
           <el-table-column type="expand" width="50">
             <template slot-scope="scope">
-              <el-tag>答案：{{scope.row.answer}}</el-tag>
+              <div v-html="scope.row.answer"></div>
             </template>
           </el-table-column>
           <el-table-column type="index" width="50">

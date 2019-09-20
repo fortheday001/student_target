@@ -11,7 +11,7 @@
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 19/09/2019 15:48:31
+ Date: 20/09/2019 08:40:38
 */
 
 SET NAMES utf8mb4;
@@ -42,9 +42,17 @@ DROP TABLE IF EXISTS `st_day_reports`;
 CREATE TABLE `st_day_reports` (
   `student_id` int(10) unsigned NOT NULL COMMENT '学生ID',
   `date` date NOT NULL COMMENT '提交日期',
-  `content` varchar(10000) NOT NULL COMMENT '日报内容',
+  `content` varchar(7000) DEFAULT NULL COMMENT '日报内容',
+  `plan` varchar(7000) DEFAULT NULL COMMENT '今日计划',
   PRIMARY KEY (`student_id`,`date`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of st_day_reports
+-- ----------------------------
+BEGIN;
+INSERT INTO `st_day_reports` VALUES (6, '2019-09-20', '已经学习会 insert', '学习 mysql');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for st_questions
