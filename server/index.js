@@ -4,6 +4,7 @@ const db = require('./db')
 const jwt = require('./jwt')
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
+const moment = require('moment');
 
 const app = new Koa();
 
@@ -43,7 +44,7 @@ routerNoJwt.post('/api/v1/teachers/access_tokens', async (ctx, next)=>{
 
 // 查看某个班级某一天的日报
 routerNoJwt.get('/api/v1/classes/:class_id/day_reports/:date', async (ctx, next)=>{
-    let _sql = `SELECT a.stu_name,b.content,b.date
+    let _sql = `SELECT a.stu_name,b.content,b.date,b.plan
                  FROM st_students a 
                   LEFT JOIN st_day_reports b ON(a.id=b.student_id AND b.date=?)
                   WHERE a.class_id=?`
@@ -373,14 +374,39 @@ studentRouter.get('/api/v1/mydayreports', async ctx=>{
 // 学生发表日报
 studentRouter.post('/api/v1/day_reports', async ctx=>{
     const _date = new Date()
-    let _sql = `REPLACE INTO st_day_reports SET ?`
-    let _data = {
-        student_id: ctx.state.user.id,
-        date: _date.getFullYear() + '-' + (_date.getMonth()+1) + '-' + _date.getDate(),
-        content: ctx.request.body.content
-    }
-    await db.query(_sql, _data)
+    let _today = moment().format('YYYY-MM-DD')
 
+    let _sql1 = 'SELECT COUNT(*) total FROM st_day_reports WHERE date=? AND student_id=?'
+    const [rows1, fields1] = await db.query(_sql1, [_today, ctx.state.user.id])
+
+    if(rows1[0].total == 0) {
+        let _sql = 'INSERT INTO st_day_reports SET ?'
+        let _data
+        if(ctx.request.body.content) {
+            _data = {
+                student_id: ctx.state.user.id,
+                date: _today,
+                content: ctx.request.body.content
+            }
+        } else {
+            _data = {
+                student_id: ctx.state.user.id,
+                date: _today,
+                plan: ctx.request.body.plan
+            }
+        }
+        await db.query(_sql, _data)
+    } else {
+        let _sql
+        if(ctx.request.body.content) {
+            _sql = 'UPDATE st_day_reports SET content=? WHERE student_id=? AND date=?'
+            await db.query(_sql, [ctx.request.body.content, ctx.state.user.id, _today])
+        } else {
+            _sql = 'UPDATE st_day_reports SET plan=? WHERE student_id=? AND date=?'
+            await db.query(_sql, [ctx.request.body.plan, ctx.state.user.id, _today])
+            console.log(_sql)
+        }
+    }
     ctx.body = {
         ok: 1
     }

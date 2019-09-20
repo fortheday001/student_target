@@ -1,7 +1,8 @@
 <template>
   <div class="class">
     <div class="tool-box">
-      <el-button @click="dialog.addDialog.show=true">添加今天日报</el-button>
+      <el-button @click="dialog.addPlanDialog.show=true">添加学习计划</el-button>
+      <el-button @click="dialog.addDialog.show=true">添加学习日报</el-button>
     </div>
     <div class="data-box">
       <el-card>
@@ -12,7 +13,9 @@
           :formatter="dateFormat"
           prop="date">
           </el-table-column>
-          <el-table-column label="内容" prop="content">
+          <el-table-column prop="plan" label="学习计划">
+          </el-table-column>
+          <el-table-column prop="content" label="学习日报">
           </el-table-column>
         </el-table>
         <br>
@@ -25,10 +28,22 @@
         </el-pagination>
       </el-card>
     </div>
-    <!-- 添加的表单 -->
-    <el-dialog title="添加日报" :visible.sync="dialog.addDialog.show">
+    <!-- 添加学习计划 -->
+    <el-dialog title="添加学习计划" :visible.sync="dialog.addPlanDialog.show">
+      <el-form ref="addplanform" :rules="rules" :model="planform">
+        <el-form-item label="今日学习计划（最多2500字），写写今天自习时的学习计划" prop="plan">
+          <el-input autocomplete="off" v-model="planform.plan" type="textarea" :rows="3"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="dialog.addPlanDialog.show = false">取 消</el-button>
+        <el-button type="primary" @click="addPlanFormSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 添加学习日报 -->
+    <el-dialog title="添加学习日报" :visible.sync="dialog.addDialog.show">
       <el-form ref="addform" :rules="rules" :model="form">
-        <el-form-item label="内容（最多3000字）" prop="content">
+        <el-form-item label="今日工作总结（最多2500字），写写今天的学习成果、遇到的问题、心得、建议等" prop="content">
           <el-input autocomplete="off" v-model="form.content" type="textarea" :rows="3"></el-input>
         </el-form-item>
       </el-form>
@@ -47,16 +62,23 @@ export default {
       form: {
         content: ''
       },
+      planform: {
+        plan: ''
+      },
       filter: {
         page: 1,
         per_page: 20
       },
       total: 0,
       rules: {
-        content: { required: true, message: '日报内容不能为空' }
+        content: { required: true, message: '内容不能为空' },
+        plan: { required: true, message: '内容不能为空' }
       },
       dialog: {
         addDialog: {
+          show: false
+        },
+        addPlanDialog: {
           show: false
         }
       },
@@ -83,6 +105,18 @@ export default {
             if (res.data.ok === 1) {
               this.getDayReportData()
               this.dialog.addDialog.show = false
+            }
+          })
+        }
+      })
+    },
+    addPlanFormSubmit () {
+      this.$refs.addplanform.validate(valid => {
+        if (valid) {
+          this.$axios.post('/v1/day_reports', this.planform).then(res => {
+            if (res.data.ok === 1) {
+              this.getDayReportData()
+              this.dialog.addPlanDialog.show = false
             }
           })
         }

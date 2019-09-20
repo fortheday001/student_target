@@ -21,7 +21,9 @@
           </el-table-column>
           <el-table-column prop="stu_name" label="学生姓名" width="100">
           </el-table-column>
-          <el-table-column prop="content" label="内容">
+          <el-table-column prop="plan" label="今日学习计划">
+          </el-table-column>
+          <el-table-column prop="content" label="今日学习总结">
           </el-table-column>
         </el-table>
       </el-card>
