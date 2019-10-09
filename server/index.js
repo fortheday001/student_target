@@ -181,7 +181,7 @@ routerNoJwt.get('/api/v1/students/:id/target_tongji', async ctx=>{
                     WHERE x.step_id>0
                     GROUP BY x.step_id
                      ORDER BY x.step_id`
-    await db.query('set sql_mode=""')
+    await db.query('set global sql_mode=""')
     const [rows, fields] = await db.query(_sql1, [ctx.params.id])
 
     ctx.body = {
